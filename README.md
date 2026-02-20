@@ -5,4 +5,4 @@ StudentPulse is a dynamic web application designed to formalize the creation of 
 ### Team members
 
 - Khaleel Hassan (412002594)
-- 
+- Aditya Avinash (761005899)
