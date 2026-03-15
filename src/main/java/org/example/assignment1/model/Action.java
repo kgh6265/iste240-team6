@@ -1,42 +1,41 @@
 package org.example.assignment1.model;
 
-import org.springframework.stereotype.Component;
-
 public class Action {
-    private int id;
-    private String studentId;
-    private String eventId;
-    private String timestamp;
 
-    public int getId() {
-        return id;
-    }
+  private int id;
+  private String studentId;
+  private String eventId;
+  private String timestamp;
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  public int getId() {
+    return id;
+  }
 
-    public String getStudentId() {
-        return studentId;
-    }
+  public void setId(int id) {
+    this.id = id;
+  }
 
-    public void setStudentId(String studentId) {
-        this.studentId = studentId;
-    }
+  public String getStudentId() {
+    return studentId;
+  }
 
-    public String getEventId() {
-        return eventId;
-    }
+  public void setStudentId(String studentId) {
+    this.studentId = studentId;
+  }
 
-    public void setEventId(String eventId) {
-        this.eventId = eventId;
-    }
+  public String getEventId() {
+    return eventId;
+  }
 
-    public String getTimestamp() {
-        return timestamp;
-    }
+  public void setEventId(String eventId) {
+    this.eventId = eventId;
+  }
 
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
-    }
+  public String getTimestamp() {
+    return timestamp;
+  }
+
+  public void setTimestamp(String timestamp) {
+    this.timestamp = timestamp;
+  }
 }

@@ -16,18 +16,18 @@ public class StudentController {
         this.mainService = mainService;
     }
 
-    @GetMapping("/student")
+    @GetMapping("/students")
     public String getStudents(Model model) {
         model.addAttribute("studentList", mainService.findAllStudents());
         return "students";
     }
 
-    @GetMapping("/student/add")
+    @GetMapping("/students/add")
     public String getAddStudentForm() {
         return "students-add";
     }
 
-    @PostMapping("/student/add")
+    @PostMapping("/students/add")
     public String addStudent(Student student, Model model) {
         mainService.addStudent(student);
         model.addAttribute("entityName", "Student");
