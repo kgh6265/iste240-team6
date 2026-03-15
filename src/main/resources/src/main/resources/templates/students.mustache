@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Students</title>
+</head>
+<body>
+
+<h1>Students</h1>
+
+<a href="/student/add">Add Student</a>
+
+<table border="1">
+
+<tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Email</th>
+</tr>
+
+{{#studentList}}
+<tr>
+    <td>{{id}}</td>
+    <td>{{name}}</td>
+    <td>{{email}}</td>
+</tr>
+{{/studentList}}
+
+</table>
+
+<a href="/">Home</a>
+
+</body>
+</html>
