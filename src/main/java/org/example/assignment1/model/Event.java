@@ -12,6 +12,7 @@ public class Event {
     private String category;
     private String status;
     private List<Action> actions;
+    private List<Comment> comments;
 
     public Event() {
     }
@@ -59,4 +60,12 @@ public class Event {
     public List<Action> getActions() { return actions; }
 
     public void setActions(List<Action> actions) { this.actions = actions; }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
 }
