@@ -1,6 +1,7 @@
 package org.example.assignment1.services;
 
 import org.example.assignment1.model.Action;
+import org.example.assignment1.model.Comment;
 import org.example.assignment1.model.Event;
 import org.example.assignment1.model.Student;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ public class MainService {
     List<Event> events = new ArrayList<Event>();
     List<Action> actions = new ArrayList<Action>();
     List<Student> students = new ArrayList<Student>();
+    List<Comment> comments = new ArrayList<Comment>();
 
     public MainService() {
         Student s1 = new Student();
@@ -22,12 +24,18 @@ public class MainService {
         students.add(s1);
 
         Event e1 = new Event();
-        e1.setId("001");
+        e1.setId("E001");
         e1.setTitle("Clubs Day");
         e1.setCategory("SG");
         e1.setStatus("IN_PROGRESS");
         e1.setActions(new ArrayList<>());
         events.add(e1);
+
+        Comment c1 = new Comment();
+        c1.setId("C1");
+        c1.setEventid("E001");
+        c1.setContent("We should have more clubs and free food.");
+        comments.add(c1);
     }
 
     public List<Event> findAllEvents() {
@@ -53,5 +61,13 @@ public class MainService {
                 this.actions.add(action);
             }
         }
+    }
+
+    public List<Comment> findAllComments() {
+        return comments;
+    }
+
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
     }
 }
