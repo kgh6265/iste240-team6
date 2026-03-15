@@ -2,12 +2,20 @@
 <html>
 <head>
     <title>Add Student</title>
+    <style>
+        body { margin: 0 auto; max-width: 600px; font-family: sans-serif; }
+        h1 { color: blue; }
+        label { display: block; margin-top: 12px; font-weight: bold; }
+        input, select { width: 100%; padding: 8px; margin-top: 4px; box-sizing: border-box; }
+        button { margin-top: 20px; padding: 10px 20px; background-color: blue; color: white; border: none; cursor: pointer; }
+        a { display: inline-block; margin-top: 16px; color: blue; }
+    </style>
 </head>
 <body>
 
 <h1>Add Student</h1>
 
-<form action="/student/add" method="post">
+<form action="/students/add" method="post">
 
 ID:
 <input type="text" name="id"><br>
