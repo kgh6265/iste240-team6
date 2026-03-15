@@ -2,7 +2,8 @@ package org.example.assignment1.model;
 
 import org.springframework.stereotype.Component;
 
-@Component
+import java.util.List;
+
 public class Event {
 
     private String id;
@@ -10,6 +11,7 @@ public class Event {
     private String description;
     private String category;
     private String status;
+    private List<Action> actions;
 
     public Event() {
     }
@@ -53,4 +55,8 @@ public class Event {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public List<Action> getActions() { return actions; }
+
+    public void setActions(List<Action> actions) { this.actions = actions; }
 }

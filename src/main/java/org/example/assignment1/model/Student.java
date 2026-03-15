@@ -2,7 +2,6 @@ package org.example.assignment1.model;
 
 import org.springframework.stereotype.Component;
 
-@Component
 public class Student {
     private String id;
     private String name;
