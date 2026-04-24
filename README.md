@@ -8,4 +8,4 @@ StudentPulse is a dynamic web application designed to formalize the creation of 
 - Aditya Avinash (761005899)
 - Harsh Bhatia (400003132)
 
-Branch merger: Khaleel Hassan
+Branch merger: Khaleel Hassan (412002594)
