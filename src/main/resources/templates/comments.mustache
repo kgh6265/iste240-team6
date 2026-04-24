@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Comments</title>
+    <style>
+        body { margin: 0 auto; max-width: 700px; font-family: sans-serif; }
+        h1 { color: blue; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ccc; padding: 8px 12px; text-align: left; }
+        th { background-color: #f0f0f0; }
+        a { display: inline-block; margin-top: 20px; color: blue; }
+    </style>
+</head>
+<body>
+<h1>Comments</h1>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Event ID</th>
+        <th>Student ID</th>
+        <th>Content</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#commentList}}
+        <tr>
+            <td>{{id}}</td>
+            <td>{{eventid}}</td>
+            <td>{{studentid}}</td>
+            <td>{{content}}</td>
+        </tr>
+    {{/commentList}}
+    </tbody>
+</table>
+<a href="/comments/add">+ Add New Comment</a><br>
+<a href="/">← Back to Home</a>
+</body>
+</html>

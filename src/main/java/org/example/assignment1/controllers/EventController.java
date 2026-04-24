@@ -32,7 +32,6 @@ public class EventController {
     public String addEvent(Event event, Model model) {
         event.setActions(new java.util.ArrayList<>());
         mainService.addEvent(event);
-        model.addAttribute("entityName", "Event");
         return "redirect:/add/success/Event";
     }
 
