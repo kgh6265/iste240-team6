@@ -11,20 +11,20 @@ public class Comment {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(nullable = false)
-  private Integer eventid;
+  @ManyToOne
+  @JoinColumn(name = "event_id", nullable = false)
+  private Event event;
 
-  @Column(nullable = false)
-  private Integer studentid;
+  @ManyToOne
+  @JoinColumn(name = "student_id", nullable = false)
+  private Student student;
 
   @Column(nullable = false)
   private String content;
 
   public Comment() {}
 
-  public Comment(Integer eventid, Integer studentid, String content) {
-    this.eventid = eventid;
-    this.studentid = studentid;
+  public Comment(String content) {
     this.content = content;
   }
 
@@ -36,22 +36,6 @@ public class Comment {
     this.id = id;
   }
 
-  public Integer getEventid() {
-    return eventid;
-  }
-
-  public void setEventid(Integer eventid) {
-    this.eventid = eventid;
-  }
-
-  public Integer getStudentid() {
-    return studentid;
-  }
-
-  public void setStudentid(Integer studentid) {
-    this.studentid = studentid;
-  }
-
   public String getContent() {
     return content;
   }
@@ -59,4 +43,10 @@ public class Comment {
   public void setContent(String content) {
     this.content = content;
   }
+
+  public Event getEvent() { return event; }
+  public void setEvent(Event event) { this.event = event; }
+
+  public Student getStudent() { return student; }
+  public void setStudent(Student student) { this.student = student; }
 }

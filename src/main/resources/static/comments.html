@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comments | StudentPulse</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style>
+        body { background-color: #F5F0E8; font-family: 'Georgia', serif; color: #3D2B1F; }
+        .top-nav { background-color: #3D2B1F; padding: 0.8rem 2rem; }
+        .top-nav .nav-link { color: #D4C5A9 !important; font-size: 0.95rem; }
+        .top-nav .nav-link:hover { color: #ffffff !important; }
+        .page-banner { background: linear-gradient(135deg, #3D2B1F, #6B4F35); color: #F5F0E8; padding: 2rem 2.5rem; border-radius: 14px; margin-bottom: 1.5rem; }
+        .page-banner h3 { font-weight: 700; margin-bottom: 0.2rem; }
+        .page-banner small { opacity: 0.85; }
+        .card { background: #FDFAF5; border: 1.5px solid #E8DECE; border-radius: 12px; }
+        .table thead.table-dark th { background-color: #3D2B1F; color: #F5F0E8; border-color: #3D2B1F; }
+        .table tbody tr:hover { background-color: #FFF8EE; }
+        .table td { color: #3D2B1F; vertical-align: middle; }
+        .form-control, .form-select { background-color: #FDFAF5; border: 1.5px solid #E8DECE; color: #3D2B1F; }
+        .form-control:focus, .form-select:focus { border-color: #8B7355; box-shadow: 0 0 0 0.2rem rgba(139, 115, 85, 0.2); background-color: #FDFAF5; }
+        .btn-primary { background-color: #6B4F35; border-color: #6B4F35; color: #F5F0E8; }
+        .btn-primary:hover { background-color: #3D2B1F; border-color: #3D2B1F; }
+        .btn-warning { background-color: #C9A96E; border-color: #C9A96E; color: #3D2B1F; }
+        .btn-warning:hover { background-color: #B8935A; border-color: #B8935A; }
+        .modal-content { background-color: #FDFAF5; border: 1.5px solid #E8DECE; border-radius: 12px; }
+        .modal-header { border-bottom: 1.5px solid #E8DECE; }
+        .modal-footer { border-top: 1.5px solid #E8DECE; }
+        .modal-title { color: #3D2B1F; font-weight: 700; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark top-nav mb-4">
+    <a class="navbar-brand fw-bold text-white" href="index.html">🎓 StudentPulse</a>
+    <div class="d-flex gap-3">
+        <a class="nav-link" href="index.html">Home</a>
+        <a class="nav-link" href="students.html">Students</a>
+        <a class="nav-link" href="events.html">Events</a>
+        <a class="nav-link fw-bold text-white" href="comments.html">Comments</a>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="page-banner">
+        <h3 class="mb-0">💬 Comments</h3>
+        <small>Moderate and manage discussion posts across all events</small>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="input-group w-50">
+            <span class="input-group-text bg-white border-end-0">🔍</span>
+            <input type="text" id="searchInput" class="form-control border-start-0" placeholder="Search by event ID...">
+        </div>
+        <button class="btn btn-primary" id="openAddModal">+ New Comment</button>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Event</th>
+                    <th>Student</th>
+                    <th>Content</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody id="commentsTable">
+                <tr><td colspan="5" class="text-center py-3">Loading comments...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="commentModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Post Comment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="commentId">
+                <div class="mb-3">
+                    <label class="form-label">Event</label>
+                    <select class="form-select" id="eventSelect">
+                        <option value="" disabled selected>Select Event</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Student</label>
+                    <select class="form-select" id="studentSelect">
+                        <option value="" disabled selected>Select Student</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Comment Content</label>
+                    <textarea class="form-control" id="commentContent" rows="3" placeholder="Write something..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" id="saveBtn">Save Comment</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1100">
+    <div id="toast" class="toast text-white border-0" role="alert">
+        <div class="d-flex">
+            <div class="toast-body" id="toastMsg"></div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    var API = '/api/comments';
+    var API_EVENTS = '/api/events';
+    var API_STUDENTS = '/api/students';
+    var editingId = null;
+
+    $(document).ready(function() {
+        loadComments();
+        loadDropdowns();
+    });
+
+    $("#searchInput").on("input", function() {
+        var eventId = $(this).val().trim();
+        if (eventId.length > 0) {
+            $.get(API + '/search?eventId=' + eventId, function(data) {
+                renderTable(data);
+            });
+        } else {
+            loadComments();
+        }
+    });
+
+    function loadDropdowns() {
+        $.get(API_EVENTS, function(data) {
+            data.forEach(e => $("#eventSelect").append(new Option(e.title + " (ID: " + e.id + ")", e.id)));
+        });
+        $.get(API_STUDENTS, function(data) {
+            data.forEach(s => $("#studentSelect").append(new Option(s.name, s.id)));
+        });
+    }
+
+    function loadComments() {
+        $.get(API, function(data) {
+            renderTable(data);
+        }).fail(function() {
+            $("#commentsTable").html("<tr><td colspan='5' class='text-center text-danger'>Failed to load comments.</td></tr>");
+        });
+    }
+
+    function renderTable(data) {
+        if (data.length === 0) {
+            $("#commentsTable").html("<tr><td colspan='5' class='text-center text-muted'>No comments found.</td></tr>");
+            return;
+        }
+
+        var rows = "";
+        data.forEach(c => {
+            var eventTitle = c.event ? c.event.title : "Unknown Event";
+            var studentName = c.student ? c.student.name : "Unknown Student";
+
+            rows += `<tr>
+                <td>${c.id}</td>
+                <td><small class='text-muted'>ID: ${c.event.id}</small><br>${eventTitle}</td>
+                <td>${studentName}</td>
+                <td style="max-width: 300px;" class="text-truncate">${c.content}</td>
+                <td>
+                    <button class='btn btn-sm btn-warning editBtn'
+                        data-id='${c.id}' data-event='${c.event.id}'
+                        data-student='${c.student.id}' data-content='${c.content}'>Edit</button>
+                    <button class='btn btn-sm btn-danger deleteBtn' data-id='${c.id}'>Delete</button>
+                </td>
+            </tr>`;
+        });
+        $("#commentsTable").html(rows);
+    }
+
+    $("#openAddModal").click(function() {
+        editingId = null;
+        $("#modalTitle").text("Post Comment");
+        $("#commentId").val("");
+        $("#commentContent").val("");
+        $("#eventSelect, #studentSelect").val("");
+        new bootstrap.Modal($("#commentModal")[0]).show();
+    });
+
+    $(document).on("click", ".editBtn", function() {
+        editingId = $(this).data("id");
+        $("#modalTitle").text("Edit Comment");
+        $("#eventSelect").val($(this).data("event"));
+        $("#studentSelect").val($(this).data("student"));
+        $("#commentContent").val($(this).data("content"));
+        new bootstrap.Modal($("#commentModal")[0]).show();
+    });
+
+    $("#saveBtn").click(function() {
+        var commentData = {
+            content: $("#commentContent").val(),
+            event: { id: parseInt($("#eventSelect").val()) },
+            student: { id: parseInt($("#studentSelect").val()) }
+        };
+
+        var url = API;
+        var method = "POST";
+        if (editingId) {
+            url = API + "/" + editingId;
+            method = "PUT";
+        }
+
+        $.ajax({
+            method: method,
+            url: url,
+            contentType: "application/json",
+            data: JSON.stringify(commentData),
+            success: function() {
+                bootstrap.Modal.getInstance($("#commentModal")[0]).hide();
+                loadComments();
+                showToast(editingId ? "Comment updated!" : "Comment posted!", "success");
+            },
+            error: function() { showToast("Error saving comment", "danger"); }
+        });
+    });
+
+    $(document).on("click", ".deleteBtn", function() {
+        if (!confirm("Delete this comment?")) return;
+        var id = $(this).data("id");
+        $.ajax({
+            method: "DELETE",
+            url: API + "/" + id,
+            success: function() { loadComments(); showToast("Comment removed", "success"); }
+        });
+    });
+
+    function showToast(message, type) {
+        $("#toast").removeClass().addClass("toast text-white border-0 bg-" + type);
+        $("#toastMsg").text(message);
+        new bootstrap.Toast($("#toast")[0]).show();
+    }
+</script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-package org.example.assignment1.repository;
+package org.example.assignment1.dataLayer;
 import org.example.assignment1.model.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

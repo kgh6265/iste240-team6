@@ -32,12 +32,18 @@ public class CommentService {
         return commentRepository.findByStudentId(studentId);
     }
 
+    public List<Comment> getCommentsByEvent(Long eventId) {
+        return commentRepository.findByEventId(eventId);
+    }
+
     public Comment updateComment(Long id, Comment details) {
         Comment existing = commentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Comment not found"));
+
         existing.setContent(details.getContent());
-        existing.setEventid(details.getEventid());
-        existing.setStudentid(details.getStudentid());
+        existing.setEvent(details.getEvent());
+        existing.setStudent(details.getStudent());
+
         return commentRepository.save(existing);
     }
 

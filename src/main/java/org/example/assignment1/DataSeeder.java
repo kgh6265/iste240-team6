@@ -2,7 +2,7 @@
 package org.example.assignment1;
 
 import org.example.assignment1.model.Event;
-import org.example.assignment1.repositories.EventRepository;
+import org.example.assignment1.dataLayer.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import jakarta.annotation.PostConstruct;

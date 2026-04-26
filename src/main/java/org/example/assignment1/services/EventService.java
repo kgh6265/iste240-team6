@@ -3,7 +3,7 @@ package org.example.assignment1.services;
 
 import jakarta.transaction.Transactional;
 import org.example.assignment1.model.Event;
-import org.example.assignment1.repositories.EventRepository;
+import org.example.assignment1.dataLayer.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
