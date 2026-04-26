@@ -1,35 +1,53 @@
 package org.example.assignment1.model;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name="comments")
 public class Comment {
 
-  private String id;
-  private String eventid;
-  private String studentid;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+
+  @Column(nullable = false)
+  private Integer eventid;
+
+  @Column(nullable = false)
+  private Integer studentid;
+
+  @Column(nullable = false)
   private String content;
 
   public Comment() {}
 
-  public String getId() {
+  public Comment(Integer eventid, Integer studentid, String content) {
+    this.eventid = eventid;
+    this.studentid = studentid;
+    this.content = content;
+  }
+
+  public Long getId() {
     return id;
   }
 
-  public void setId(String id) {
+  public void setId(Long id) {
     this.id = id;
   }
 
-  public String getEventid() {
+  public Integer getEventid() {
     return eventid;
   }
 
-  public void setEventid(String eventid) {
+  public void setEventid(Integer eventid) {
     this.eventid = eventid;
   }
 
-  public String getStudentid() {
+  public Integer getStudentid() {
     return studentid;
   }
 
-  public void setStudentid(String studentid) {
+  public void setStudentid(Integer studentid) {
     this.studentid = studentid;
   }
 

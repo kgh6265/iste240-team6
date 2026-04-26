@@ -1,11 +1,34 @@
 package org.example.assignment1.model;
 
-public class Action {
+import jakarta.persistence.*;
 
+import javax.annotation.processing.Generated;
+
+@Entity
+@Table(name="actions")
+public class Action {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
-  private String studentId;
-  private String eventId;
+
+  @Column(nullable = false)
+  private Integer eventid;
+
+  @Column(nullable = false)
+  private Integer studentid;
+
+  @Column(nullable = false)
   private String timestamp;
+
+  public Action() {
+
+  }
+
+  public Action(Integer eventid, Integer studentid, String timestamp) {
+    this.eventid = eventid;
+    this.studentid = studentid;
+    this.timestamp = timestamp;
+  }
 
   public int getId() {
     return id;
@@ -15,20 +38,20 @@ public class Action {
     this.id = id;
   }
 
-  public String getStudentId() {
-    return studentId;
+  public Integer getEventid() {
+    return eventid;
   }
 
-  public void setStudentId(String studentId) {
-    this.studentId = studentId;
+  public void setEventid(Integer eventid) {
+    this.eventid = eventid;
   }
 
-  public String getEventId() {
-    return eventId;
+  public Integer getStudentid() {
+    return studentid;
   }
 
-  public void setEventId(String eventId) {
-    this.eventId = eventId;
+  public void setStudentid(Integer studentid) {
+    this.studentid = studentid;
   }
 
   public String getTimestamp() {
