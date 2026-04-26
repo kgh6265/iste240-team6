@@ -17,8 +17,8 @@ public interface ActionRepository extends JpaRepository<Action, Integer> {
 
     List<Action> findAll();
 
-    @Query("SELECT a FROM Action a WHERE a.eventid = :eventId")
-    List<Action> findByEventId(@Param("eventId") Integer eventId);
+    @Query("SELECT a FROM Action a WHERE a.event.id = :eventId")
+    List<Action> findByEventId(@Param("eventId") Long eventId);
 
     @Modifying
     @Query("UPDATE Action a SET a.timestamp = :timestamp WHERE a.id = :id")

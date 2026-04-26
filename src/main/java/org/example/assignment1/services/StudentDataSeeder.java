@@ -2,7 +2,7 @@
 
 package org.example.assignment1.services;
 import org.example.assignment1.model.Student;
-import org.example.assignment1.repository.StudentRepository;
+import org.example.assignment1.dataLayer.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import jakarta.annotation.PostConstruct;

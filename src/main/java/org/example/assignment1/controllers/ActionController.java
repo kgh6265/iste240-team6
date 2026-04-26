@@ -35,7 +35,7 @@ public class ActionController {
     }
 
     @GetMapping("/search")
-    public List<Action> search(@RequestParam Integer eventId) {
+    public List<Action> search(@RequestParam Long eventId) {
         return actionService.findByEvent(eventId);
     }
 

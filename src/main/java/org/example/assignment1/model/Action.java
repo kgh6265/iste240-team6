@@ -12,11 +12,13 @@ public class Action {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
 
-  @Column(nullable = false)
-  private Integer eventid;
+  @ManyToOne
+  @JoinColumn(name = "event_id", nullable = false)
+  private Event event;
 
-  @Column(nullable = false)
-  private Integer studentid;
+  @ManyToOne
+  @JoinColumn(name = "student_id", nullable = false)
+  private Student student;
 
   @Column(nullable = false)
   private String timestamp;
@@ -25,9 +27,7 @@ public class Action {
 
   }
 
-  public Action(Integer eventid, Integer studentid, String timestamp) {
-    this.eventid = eventid;
-    this.studentid = studentid;
+  public Action(String timestamp) {
     this.timestamp = timestamp;
   }
 
@@ -39,22 +39,6 @@ public class Action {
     this.id = id;
   }
 
-  public Integer getEventid() {
-    return eventid;
-  }
-
-  public void setEventid(Integer eventid) {
-    this.eventid = eventid;
-  }
-
-  public Integer getStudentid() {
-    return studentid;
-  }
-
-  public void setStudentid(Integer studentid) {
-    this.studentid = studentid;
-  }
-
   public String getTimestamp() {
     return timestamp;
   }
@@ -62,4 +46,10 @@ public class Action {
   public void setTimestamp(String timestamp) {
     this.timestamp = timestamp;
   }
+
+  public Event getEvent() { return event; }
+  public void setEvent(Event event) { this.event = event; }
+
+  public Student getStudent() { return student; }
+  public void setStudent(Student student) { this.student = student; }
 }

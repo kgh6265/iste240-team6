@@ -16,12 +16,18 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     List<Comment> findAll();
 
-    @Query("SELECT c FROM Comment c WHERE c.studentid = :studentId")
+    @Query("SELECT c FROM Comment c WHERE c.student.id = :studentId")
     List<Comment> findByStudentId(@Param("studentId") Integer studentId);
 
     @Modifying
     @Query("UPDATE Comment c SET c.content = :content WHERE c.id = :id")
     int updateContentById(@Param("id") Long id, @Param("content") String content);
+
+    @Query("SELECT c FROM Comment c WHERE c.event.id = :eventId")
+    List<Comment> findByEventId(@Param("eventId") Long eventId);
+
+    @Query("SELECT c FROM Comment c WHERE c.student.id = :studentId")
+    List<Comment> findByStudentId(@Param("studentId") Long studentId);
 
     void deleteById(Long id);
 }
