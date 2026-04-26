@@ -339,6 +339,58 @@
         $("#searchInput").val("");
         loadEvents();
     });
+
+    function renderTable(data) {
+        if (data.length === 0) {
+            $("#result").html("<p class='text-muted'>No events found.</p>");
+            return;
+        }
+
+        var table = "<table class='table table-bordered table-hover'>";
+        table += "<thead><tr><th>ID</th><th>Title</th><th>Category</th><th>Status</th><th>Actions</th></tr></thead>";
+        table += "<tbody>";
+
+        for (var i = 0; i < data.length; i++) {
+            var e = data[i];
+            table += "<tr>";
+            table += "<td>" + e.id + "</td>";
+            table += "<td>" + e.title + "</td>";
+            table += "<td>" + (e.category || "-") + "</td>";
+            table += "<td>" + e.status + "</td>";
+            table += `<td>
+            <div class="btn-group">
+                <button class='btn btn-success btn-sm' onclick='supportEvent(${e.id})'>❤️ Support</button>
+                <a href='event-details.html?id=${e.id}' class='btn btn-primary-custom btn-sm'>View Details</a>
+                <button class='btn btn-warning-custom btn-sm' onclick='openEdit(${e.id}, "${e.title}", "${e.description}", "${e.category}", "${e.status}")'>Edit</button>
+                <button class='btn btn-danger-custom btn-sm' onclick='deleteEvent(${e.id})'>Delete</button>
+            </div>
+        </td>`;
+            table += "</tr>";
+        }
+        table += "</tbody></table>";
+        $("#result").html(table);
+    }
+
+    function supportEvent(eventId) {
+        var actionData = {
+            eventid: eventId,
+            studentid: 1,
+            timestamp: new Date().toISOString()
+        };
+
+        $.ajax({
+            url: "/api/actions",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(actionData),
+            success: function() {
+                alert("Event supported! Your action has been recorded.");
+            },
+            error: function() {
+                alert("Failed to support event.");
+            }
+        });
+    }
 </script>
 </body>
 </html>
