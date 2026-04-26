@@ -1,4 +1,5 @@
 // Aditya Avinash - 761005899
+
 package org.example.assignment1.controllers;
 import org.example.assignment1.model.Student;
 import org.example.assignment1.services.StudentService;
@@ -39,17 +40,27 @@ public class StudentController {
         return new ResponseEntity<>(students, HttpStatus.OK);
     }
 
+
     @PostMapping
     public ResponseEntity<Student> createStudent(@RequestBody Student student) {
-        Student saved = this.studentService.createStudent(student);
-        return new ResponseEntity<>(saved, HttpStatus.CREATED);
+        try {
+            Student saved = this.studentService.createStudent(student);
+            return new ResponseEntity<>(saved, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Student> updateStudent(@PathVariable Long id,
                                                  @RequestBody Student student) {
-        Student updated = this.studentService.updateStudent(id, student);
-        return new ResponseEntity<>(updated, HttpStatus.OK);
+        try {
+            Student updated = this.studentService.updateStudent(id, student);
+            return new ResponseEntity<>(updated, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @DeleteMapping("/{id}")
