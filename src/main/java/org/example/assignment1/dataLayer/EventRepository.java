@@ -1,5 +1,5 @@
 // Student Name: Harsh Bhatia | Student ID: 400003132
-package org.example.assignment1.repositories;
+package org.example.assignment1.dataLayer;
 
 import org.example.assignment1.model.Event;
 import org.springframework.data.jpa.repository.JpaRepository;

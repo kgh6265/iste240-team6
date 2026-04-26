@@ -29,16 +29,17 @@ public class ActionService {
         return actionRepository.findById(id);
     }
 
-    public List<Action> findByEvent(Integer eventId) {
+    public List<Action> findByEvent(Long eventId) {
         return actionRepository.findByEventId(eventId);
     }
 
     public Action fullUpdate(int id, Action actionDetails) {
         Action action = actionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Action not found"));
-        action.setEventid(actionDetails.getEventid());
-        action.setStudentid(actionDetails.getStudentid());
+        action.setEvent(actionDetails.getEvent());
+        action.setStudent(actionDetails.getStudent());
         action.setTimestamp(actionDetails.getTimestamp());
+
         return actionRepository.save(action);
     }
 

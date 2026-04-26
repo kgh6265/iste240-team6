@@ -2,46 +2,77 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event Details - StudentPulse</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <style>
         body { background-color: #F5F0E8; font-family: 'Georgia', serif; color: #3D2B1F; }
-        .card-custom { background: #FDFAF5; border-radius: 12px; padding: 1.6rem; border: 1.5px solid #E8DECE; margin-bottom: 1rem; }
-        .comment-item { border-bottom: 1px solid #E8DECE; padding: 10px 0; }
+        .top-nav { background-color: #3D2B1F; padding: 0.8rem 2rem; }
+        .card-custom { background: #FDFAF5; border-radius: 12px; padding: 1.6rem; border: 1.5px solid #E8DECE; margin-bottom: 1.5rem; }
+        .comment-item { border-bottom: 1px solid #E8DECE; padding: 12px 0; }
         .btn-primary-custom { background-color: #3D2B1F; color: #F5F0E8; border: none; border-radius: 8px; }
+        .btn-primary-custom:hover { background-color: #6B4F35; color: #fff; }
+        .badge-support { background-color: #7A3B2E; color: white; }
     </style>
 </head>
 <body>
 
-<div class="container mt-5">
-    <a href="events.html" class="btn btn-outline-secondary mb-3">← Back to Events</a>
+<nav class="navbar navbar-dark top-nav mb-4">
+    <a class="navbar-brand fw-bold text-white" href="index.html">🎓 StudentPulse</a>
+</nav>
 
-    <div id="eventHeader" class="card-custom">
-        <h2 id="dispTitle">Loading Event...</h2>
-        <p id="dispDesc"></p>
-        <span id="dispCategory" class="badge bg-secondary"></span>
-        <span id="dispStatus" class="badge bg-info"></span>
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <a href="events.html" class="btn btn-outline-secondary">← Back to Events</a>
+
+        <div class="d-flex align-items-center gap-2">
+            <label class="fw-bold small">Acting As:</label>
+            <select id="activeStudentSelect" class="form-select form-select-sm" style="width: 200px;">
+                <option value="" disabled selected>-- Select Student --</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="eventHeader" class="card-custom shadow-sm">
+        <div class="d-flex justify-content-between">
+            <h2 id="dispTitle" class="fw-bold">Loading Event...</h2>
+            <button class="btn btn-success" onclick="supportEvent()">❤️ Support Event</button>
+        </div>
+        <p id="dispDesc" class="lead text-muted mt-2"></p>
+        <div>
+            <span id="dispCategory" class="badge bg-secondary p-2"></span>
+            <span id="dispStatus" class="badge bg-info p-2"></span>
+        </div>
     </div>
 
     <div class="row">
         <div class="col-md-4">
-            <h4>Quick Update Event</h4>
+            <p class="section-label fw-bold small text-uppercase text-muted">Manage Event</p>
             <div class="card-custom">
+                <label class="small">Title</label>
                 <input type="text" id="editTitle" class="form-control mb-2">
-                <textarea id="editDesc" class="form-control mb-2"></textarea>
-                <button class="btn btn-primary-custom w-100" onclick="updateEvent()">Save Event Changes</button>
+                <label class="small">Description</label>
+                <textarea id="editDesc" class="form-control mb-3" rows="3"></textarea>
+                <button class="btn btn-primary-custom w-100" onclick="updateEvent()">Save Changes</button>
+            </div>
+
+            <p class="section-label fw-bold small text-uppercase text-muted">Supports (Actions)</p>
+            <div id="actionsList" class="card-custom small">
+                <p class="text-muted">No supports yet.</p>
             </div>
         </div>
 
         <div class="col-md-8">
-            <h4>Comments</h4>
+            <p class="section-label fw-bold small text-uppercase text-muted">Conversation</p>
             <div class="card-custom">
-                <textarea id="commentContent" class="form-control" placeholder="Write a comment..."></textarea>
-                <button class="btn btn-primary-custom mt-2" onclick="postComment()">Post Comment</button>
+                <textarea id="commentContent" class="form-control" placeholder="Add to the discussion..." rows="2"></textarea>
+                <div class="d-flex justify-content-end mt-2">
+                    <button class="btn btn-primary-custom" onclick="postComment()">Post Comment</button>
+                </div>
             </div>
 
-            <div id="commentsList" class="mt-3">
+            <div id="commentsList" class="mt-2">
             </div>
         </div>
     </div>
@@ -50,19 +81,36 @@
 <script>
     const urlParams = new URLSearchParams(window.location.search);
     const eventId = urlParams.get('id');
+    const API_EVENT = "/api/events";
+    const API_STUDENT = "/api/students";
+    const API_COMMENT = "/api/comments";
+    const API_ACTION = "/api/actions";
 
     $(document).ready(function() {
+        if (!eventId) {
+            alert("No Event ID found!");
+            window.location.href = "events.html";
+        }
+        loadStudents();
         loadEventDetails();
         loadComments();
+        loadActions();
     });
 
+    function loadStudents() {
+        $.get(API_STUDENT, function(data) {
+            data.forEach(s => {
+                $("#activeStudentSelect").append(new Option(s.name, s.id));
+            });
+        });
+    }
+
     function loadEventDetails() {
-        $.get("/api/events/" + eventId, function(e) {
+        $.get(API_EVENT + "/" + eventId, function(e) {
             $("#dispTitle").text(e.title);
-            $("#dispDesc").text(e.description);
+            $("#dispDesc").text(e.description || "No description provided.");
             $("#dispCategory").text(e.category);
             $("#dispStatus").text(e.status);
-
             $("#editTitle").val(e.title);
             $("#editDesc").val(e.description);
         });
@@ -76,38 +124,51 @@
             status: $("#dispStatus").text()
         };
         $.ajax({
-            url: "/api/events/" + eventId,
+            url: API_EVENT + "/" + eventId,
             type: "PUT",
             contentType: "application/json",
             data: JSON.stringify(data),
-            success: function() { alert("Event updated!"); loadEventDetails(); }
+            success: function() {
+                alert("Event details updated!");
+                loadEventDetails();
+            }
         });
     }
 
     function loadComments() {
-        $.get("/api/comments/search?eventId=" + eventId, function(data) {
+        $.get(API_COMMENT + "/search?eventId=" + eventId, function(data) {
             var html = "";
             data.forEach(c => {
-                html += `<div class="comment-item">
-                    <p class="mb-1">${c.content}</p>
-                    <small class="text-muted">By Student ID: ${c.studentid}</small>
-                    <div class="mt-1">
-                        <button class="btn btn-sm btn-link text-danger" onclick="deleteComment(${c.id})">Delete</button>
+                html += `
+                <div class="card-custom mb-2">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="mb-1">${c.content}</p>
+                            <small class="text-muted">By Student ID: ${c.student.id}</small>
+                        </div>
+                        <button class="btn btn-sm btn-outline-danger border-0" onclick="deleteComment(${c.id})">Delete</button>
                     </div>
                 </div>`;
             });
-            $("#commentsList").html(html || "<p>No comments yet.</p>");
+            $("#commentsList").html(html || "<p class='text-center text-muted'>No comments yet. Start the conversation!</p>");
         });
     }
 
     function postComment() {
+        var studentId = $("#activeStudentSelect").val();
+        var content = $("#commentContent").val();
+
+        if (!studentId) { alert("Please select a student first!"); return; }
+        if (!content) { alert("Comment cannot be empty!"); return; }
+
         var data = {
-            eventid: eventId,
-            studentid: 1, // Placeholder
-            content: $("#commentContent").val()
+            event: { id: parseInt(eventId) },
+            student: { id: parseInt(studentId) },
+            content: content
         };
+
         $.ajax({
-            url: "/api/comments",
+            url: API_COMMENT,
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify(data),
@@ -119,14 +180,48 @@
     }
 
     function deleteComment(id) {
-        if(confirm("Delete comment?")) {
+        if (confirm("Delete this comment permanently?")) {
             $.ajax({
-                url: "/api/comments/" + id,
+                url: API_COMMENT + "/" + id,
                 type: "DELETE",
                 success: function() { loadComments(); }
             });
         }
     }
+
+    function supportEvent() {
+        var studentId = $("#activeStudentSelect").val();
+        if (!studentId) { alert("Please select a student first!"); return; }
+
+        var data = {
+            event: { id: parseInt(eventId) },
+            student: { id: parseInt(studentId) },
+            timestamp: new Date().toLocaleString()
+        };
+
+        $.ajax({
+            url: API_ACTION,
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(data),
+            success: function() {
+                alert("Event Supported!");
+                loadActions();
+            }
+        });
+    }
+
+    function loadActions() {
+        $.get(API_ACTION + "/search?eventId=" + eventId, function(data) {
+            var html = "";
+            data.forEach(a => {
+                html += `<div class="mb-1 p-1 border-bottom">❤️ Student ${a.student.id} <br> <span class="text-muted" style="font-size:0.7rem">${a.timestamp}</span></div>`;
+            });
+            $("#actionsList").html(html || "<p class='text-muted'>No supports yet.</p>");
+        });
+    }
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

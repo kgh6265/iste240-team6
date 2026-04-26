@@ -3,6 +3,8 @@ package org.example.assignment1.model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "events")
 public class Event {
@@ -22,6 +24,12 @@ public class Event {
 
   @Column(length = 50)
   private String status;
+
+  @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
+  private List<Comment> comments;
+
+  @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
+  private List<Action> actions;
 
   public Event() {}
 

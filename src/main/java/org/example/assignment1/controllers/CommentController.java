@@ -35,8 +35,17 @@ public class CommentController {
     }
 
     @GetMapping("/search")
-    public List<Comment> searchByStudent(@RequestParam Integer studentId) {
-        return commentService.getCommentsByStudent(studentId);
+    public List<Comment> searchComments(
+            @RequestParam(value = "eventId", required = false) Long eventId,
+            @RequestParam(value = "studentId", required = false) Integer studentId) {
+
+        if (eventId != null) {
+            return commentService.getCommentsByEvent(eventId);
+        } else if (studentId != null) {
+            return commentService.getCommentsByStudent(studentId);
+        }
+
+        return commentService.getAllComments();
     }
 
     @PutMapping("/{id}")
