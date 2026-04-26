@@ -16,15 +16,13 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
 
-
     @GetMapping
     public ResponseEntity<List<Student>> getAllStudents() {
         List<Student> students = this.studentService.getAllStudents();
         return new ResponseEntity<>(students, HttpStatus.OK);
     }
 
-
-    @GetMapping("/api/students/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Student> getStudentById(@PathVariable Long id) {
         Optional<Student> student = this.studentService.getStudentById(id);
 
@@ -35,13 +33,11 @@ public class StudentController {
         }
     }
 
-
-    @GetMapping("/api/students/search")
+    @GetMapping("/search")
     public ResponseEntity<List<Student>> searchStudents(@RequestParam String name) {
         List<Student> students = this.studentService.searchByName(name);
         return new ResponseEntity<>(students, HttpStatus.OK);
     }
-
 
     @PostMapping
     public ResponseEntity<Student> createStudent(@RequestBody Student student) {
@@ -49,16 +45,14 @@ public class StudentController {
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 
-
-    @PutMapping("/api/students/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Student> updateStudent(@PathVariable Long id,
                                                  @RequestBody Student student) {
         Student updated = this.studentService.updateStudent(id, student);
         return new ResponseEntity<>(updated, HttpStatus.OK);
     }
 
-
-    @DeleteMapping("/api/students/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
         this.studentService.deleteStudent(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
