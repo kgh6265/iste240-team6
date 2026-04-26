@@ -140,7 +140,7 @@
 <div class="container">
 
     <div class="hero">
-        <h2>📅 Campus Events</h2>
+        <h2>Campus Events</h2>
         <p>Browse, propose, and manage campus events at RIT Dubai.</p>
     </div>
 
@@ -160,6 +160,7 @@
         <input type="text" id="newDescription" class="form-control" placeholder="Description">
         <input type="text" id="newCategory" class="form-control" placeholder="Category (e.g. Academic, SG, Social)">
         <select id="newStatus" class="form-select">
+            <option value="" disabled selected>Select Status</option>
             <option value="PENDING">Pending</option>
             <option value="IN_PROGRESS">In Progress</option>
             <option value="COMPLETED">Completed</option>
@@ -175,6 +176,7 @@
             <input type="text" id="editDescription" class="form-control" placeholder="Description">
             <input type="text" id="editCategory" class="form-control" placeholder="Category">
             <select id="editStatus" class="form-select">
+                <option value="" disabled selected>Select Status</option>
                 <option value="PENDING">Pending</option>
                 <option value="IN_PROGRESS">In Progress</option>
                 <option value="COMPLETED">Completed</option>
