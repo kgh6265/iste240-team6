@@ -1,4 +1,4 @@
-// Student Name: [YOUR NAME] | Student ID: [YOUR ID]
+// Student Name: Harsh Bhatia | Student ID: 400003132
 package org.example.assignment1.controllers;
 
 import org.example.assignment1.model.Event;
@@ -19,13 +19,11 @@ public class EventController {
     @Autowired
     private EventService eventService;
 
-    // GET all events
     @GetMapping
     public ResponseEntity<List<Event>> getAllEvents() {
         return new ResponseEntity<>(eventService.getAllEvents(), HttpStatus.OK);
     }
 
-    // GET one event by ID
     @GetMapping("/{id}")
     public ResponseEntity<Event> getEventById(@PathVariable Long id) {
         Optional<Event> event = eventService.getEventById(id);
@@ -35,13 +33,11 @@ public class EventController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    // GET search by title keyword
     @GetMapping("/search")
     public ResponseEntity<List<Event>> searchEvents(@RequestParam String keyword) {
         return new ResponseEntity<>(eventService.searchEventsByTitle(keyword), HttpStatus.OK);
     }
 
-    // POST create new event
     @PostMapping
     public ResponseEntity<Event> createEvent(@RequestBody Event event) {
         try {
@@ -52,7 +48,6 @@ public class EventController {
         }
     }
 
-    // PUT full update
     @PutMapping("/{id}")
     public ResponseEntity<Event> updateEvent(@PathVariable Long id, @RequestBody Event event) {
         try {
@@ -63,7 +58,6 @@ public class EventController {
         }
     }
 
-    // DELETE by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEvent(@PathVariable Long id) {
         try {
