@@ -1,36 +1,79 @@
+// Aditya Avinash - 761005899
+
 package org.example.assignment1.controllers;
 
 import org.example.assignment1.model.Student;
-import org.example.assignment1.services.MainService;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.example.assignment1.services.StudentService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/api/students")
 public class StudentController {
 
-    private MainService mainService;
+    @Autowired
+    private StudentService studentService;
 
-    public StudentController(MainService mainService) {
-        this.mainService = mainService;
+    @GetMapping
+    public ResponseEntity<List<Student>> getAllStudents() {
+        List<Student> students = this.studentService.getAllStudents();
+        return new ResponseEntity<>(students, HttpStatus.OK);
     }
 
-    @GetMapping("/students")
-    public String getStudents(Model model) {
-        model.addAttribute("studentList", mainService.findAllStudents());
-        return "students";
+    @GetMapping("/{id}")
+    public ResponseEntity<Student> getStudentById(@PathVariable Long id) {
+        Optional<Student> student = this.studentService.getStudentById(id);
+
+        if (student.isPresent()) {
+            return new ResponseEntity<>(student.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
-    @GetMapping("/students/add")
-    public String getAddStudentForm() {
-        return "students-add";
+    @GetMapping("/search")
+    public ResponseEntity<List<Student>> searchStudents(@RequestParam String name) {
+        List<Student> students = this.studentService.searchByName(name);
+        return new ResponseEntity<>(students, HttpStatus.OK);
     }
 
-    @PostMapping("/students/add")
-    public String addStudent(Student student, Model model) {
-        mainService.addStudent(student);
-        model.addAttribute("entityName", "Student");
-        return "redirect:/add/success/Student";
+    @PostMapping
+    public ResponseEntity<?> createStudent(@RequestBody Student student) {
+        try {
+            Student saved = this.studentService.createStudent(student);
+            return new ResponseEntity<>(saved, HttpStatus.CREATED);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Server error", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateStudent(@PathVariable Long id,
+                                           @RequestBody Student student) {
+        try {
+            Student updated = this.studentService.updateStudent(id, student);
+            return new ResponseEntity<>(updated, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Student not found", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteStudent(@PathVariable Long id) {
+        try {
+            this.studentService.deleteStudent(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Student not found", HttpStatus.NOT_FOUND);
+        }
     }
 }
