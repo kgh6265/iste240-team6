@@ -1,43 +1,69 @@
+// Student Name: Harsh Bhatia | Student ID: 400003132
 package org.example.assignment1.controllers;
 
 import org.example.assignment1.model.Event;
-import org.example.assignment1.services.MainService;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.example.assignment1.services.EventService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/api/events")
 public class EventController {
 
-    private MainService mainService;
+    @Autowired
+    private EventService eventService;
 
-    public EventController(MainService mainService) {
-        this.mainService = mainService;
+    @GetMapping
+    public ResponseEntity<List<Event>> getAllEvents() {
+        return new ResponseEntity<>(eventService.getAllEvents(), HttpStatus.OK);
     }
 
-    @GetMapping("/events")
-    public String getEvents(Model model) {
-        model.addAttribute("eventList", mainService.findAllEvents());
-        return "events";
+    @GetMapping("/{id}")
+    public ResponseEntity<Event> getEventById(@PathVariable Long id) {
+        Optional<Event> event = eventService.getEventById(id);
+        if (event.isPresent())
+            return new ResponseEntity<>(event.get(), HttpStatus.OK);
+        else
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/events/add")
-    public String getAddEventForm() {
-        return "events-add";
+    @GetMapping("/search")
+    public ResponseEntity<List<Event>> searchEvents(@RequestParam String keyword) {
+        return new ResponseEntity<>(eventService.searchEventsByTitle(keyword), HttpStatus.OK);
     }
 
-    @PostMapping("/events/add")
-    public String addEvent(Event event, Model model) {
-        event.setActions(new java.util.ArrayList<>());
-        mainService.addEvent(event);
-        return "redirect:/add/success/Event";
+    @PostMapping
+    public ResponseEntity<Event> createEvent(@RequestBody Event event) {
+        try {
+            Event saved = eventService.saveEvent(event);
+            return new ResponseEntity<>(saved, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    @GetMapping("/add/success/{entityName}")
-    public String getSuccessPage(@PathVariable String entityName, Model model) {
-        model.addAttribute("entityName", entityName);
-        return "success";
+    @PutMapping("/{id}")
+    public ResponseEntity<Event> updateEvent(@PathVariable Long id, @RequestBody Event event) {
+        try {
+            Event updated = eventService.updateEvent(id, event);
+            return new ResponseEntity<>(updated, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteEvent(@PathVariable Long id) {
+        try {
+            eventService.deleteEvent(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

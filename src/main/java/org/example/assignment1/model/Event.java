@@ -1,72 +1,47 @@
+// Student Name: Harsh Bhatia | Student ID: 400003132
 package org.example.assignment1.model;
 
-import java.util.List;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "events")
 public class Event {
 
-  private String id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+
+  @Column(nullable = false, length = 100)
   private String title;
+
+  @Column(length = 255)
   private String description;
+
+  @Column(length = 50)
   private String category;
+
+  @Column(length = 50)
   private String status;
-  private List<Action> actions;
-  private List<Comment> comments;
 
   public Event() {}
 
-  public String getId() {
-    return id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
-  }
-
-  public String getTitle() {
-    return title;
-  }
-
-  public void setTitle(String title) {
+  public Event(String title, String description, String category, String status) {
     this.title = title;
-  }
-
-  public String getDescription() {
-    return description;
-  }
-
-  public void setDescription(String description) {
     this.description = description;
-  }
-
-  public String getCategory() {
-    return category;
-  }
-
-  public void setCategory(String category) {
     this.category = category;
-  }
-
-  public String getStatus() {
-    return status;
-  }
-
-  public void setStatus(String status) {
     this.status = status;
   }
 
-  public List<Action> getActions() {
-    return actions;
-  }
 
-  public void setActions(List<Action> actions) {
-    this.actions = actions;
-  }
+  public Long getId() { return id; }
+  public String getTitle() { return title; }
+  public String getDescription() { return description; }
+  public String getCategory() { return category; }
+  public String getStatus() { return status; }
 
-  public List<Comment> getComments() {
-    return comments;
-  }
-
-  public void setComments(List<Comment> comments) {
-    this.comments = comments;
-  }
+  public void setId(Long id) { this.id = id; }
+  public void setTitle(String title) { this.title = title; }
+  public void setDescription(String description) { this.description = description; }
+  public void setCategory(String category) { this.category = category; }
+  public void setStatus(String status) { this.status = status; }
 }
