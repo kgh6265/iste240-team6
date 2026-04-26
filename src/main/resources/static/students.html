@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Students | StudentPulse</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style>
+        body {
+            background-color: #F5F0E8;
+            font-family: 'Georgia', serif;
+            color: #3D2B1F;
+        }
+        .top-nav {
+            background-color: #3D2B1F;
+            padding: 0.8rem 2rem;
+        }
+        .top-nav .nav-link {
+            color: #D4C5A9 !important;
+            font-size: 0.95rem;
+        }
+        .top-nav .nav-link:hover {
+            color: #ffffff !important;
+        }
+        .page-banner {
+            background: linear-gradient(135deg, #3D2B1F, #6B4F35);
+            color: #F5F0E8;
+            padding: 2rem 2.5rem;
+            border-radius: 14px;
+            margin-bottom: 1.5rem;
+        }
+        .page-banner h3 {
+            font-weight: 700;
+            margin-bottom: 0.2rem;
+        }
+        .page-banner small {
+            opacity: 0.85;
+        }
+        .card {
+            background: #FDFAF5;
+            border: 1.5px solid #E8DECE;
+            border-radius: 12px;
+        }
+        .table thead.table-dark th {
+            background-color: #3D2B1F;
+            color: #F5F0E8;
+            border-color: #3D2B1F;
+        }
+        .table tbody tr:hover {
+            background-color: #FFF8EE;
+        }
+        .table td {
+            color: #3D2B1F;
+            vertical-align: middle;
+        }
+        .form-control {
+            background-color: #FDFAF5;
+            border: 1.5px solid #E8DECE;
+            color: #3D2B1F;
+        }
+        .form-control:focus {
+            border-color: #8B7355;
+            box-shadow: 0 0 0 0.2rem rgba(139, 115, 85, 0.2);
+            background-color: #FDFAF5;
+        }
+        .btn-primary {
+            background-color: #6B4F35;
+            border-color: #6B4F35;
+            color: #F5F0E8;
+        }
+        .btn-primary:hover {
+            background-color: #3D2B1F;
+            border-color: #3D2B1F;
+        }
+        .btn-warning {
+            background-color: #C9A96E;
+            border-color: #C9A96E;
+            color: #3D2B1F;
+        }
+        .btn-warning:hover {
+            background-color: #B8935A;
+            border-color: #B8935A;
+        }
+        .modal-content {
+            background-color: #FDFAF5;
+            border: 1.5px solid #E8DECE;
+            border-radius: 12px;
+        }
+        .modal-header {
+            border-bottom: 1.5px solid #E8DECE;
+        }
+        .modal-footer {
+            border-top: 1.5px solid #E8DECE;
+        }
+        .modal-title {
+            color: #3D2B1F;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-dark top-nav mb-4">
+    <a class="navbar-brand fw-bold text-white" href="index.html">🎓 StudentPulse</a>
+    <div class="d-flex gap-3">
+        <a class="nav-link" href="index.html">Home</a>
+        <a class="nav-link fw-bold text-white" href="students.html">Students</a>
+        <a class="nav-link" href="events.html">Events</a>
+        <a class="nav-link" href="comments.html">Comments</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <div class="page-banner">
+        <h3 class="mb-0">👥 Students</h3>
+        <small>View and manage all registered students</small>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <input type="text" id="searchInput" class="form-control w-50"
+               placeholder="🔍 Search by name...">
+        <button class="btn btn-primary" id="openAddModal">+ Add Student</button>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>RIT ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody id="studentsTable">
+                <tr><td colspan="6" class="text-center py-3">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="studentModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Add Student</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="studentId">
+                <div class="mb-3">
+                    <label class="form-label">RIT ID</label>
+                    <input type="text" class="form-control" id="ritId" placeholder="e.g. 412002594">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="studentName" placeholder="Full Name">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" id="studentEmail" placeholder="email@rit.edu">
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="studentActive" checked>
+                    <label class="form-check-label">Active Student</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" id="saveBtn">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1100">
+    <div id="toast" class="toast text-white border-0" role="alert">
+        <div class="d-flex">
+            <div class="toast-body" id="toastMsg"></div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                    data-bs-dismiss="toast"></button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+
+    var API = '/api/students';
+    var editingId = null;
+
+    $(document).ready(function() {
+        loadStudents();
+    });
+
+    $("#searchInput").on("input", function() {
+        var name = $(this).val().trim();
+        if (name.length > 0) {
+            $.get(API + '/search?name=' + name, function(data) {
+                renderTable(data);
+            }).fail(function() {
+                showToast('Search failed', 'danger');
+            });
+        } else {
+            loadStudents();
+        }
+    });
+
+    function loadStudents() {
+        $.get(API, function(data) {
+            renderTable(data);
+        }).fail(function() {
+            $("#studentsTable").html("<tr><td colspan='6' class='text-center text-danger'>Could not load students.</td></tr>");
+        });
+    }
+
+    function renderTable(data) {
+        if (data.length === 0) {
+            $("#studentsTable").html("<tr><td colspan='6' class='text-center text-muted'>No students found.</td></tr>");
+            return;
+        }
+
+        var rows = "";
+        for (var i = 0; i < data.length; i++) {
+            var s = data[i];
+
+            var badge = "";
+            if (s.active) {
+                badge = "<span class='badge' style='background-color:#6B4F35;'>Active</span>";
+            } else {
+                badge = "<span class='badge bg-secondary'>Inactive</span>";
+            }
+
+            var editBtn = "<button class='btn btn-sm btn-warning me-1 editBtn'"
+                + " data-id='" + s.id + "'"
+                + " data-ritid='" + s.ritId + "'"
+                + " data-name='" + s.name + "'"
+                + " data-email='" + s.email + "'"
+                + " data-active='" + s.active + "'>Edit</button>";
+
+            var deleteBtn = "<button class='btn btn-sm btn-danger deleteBtn'"
+                + " data-id='" + s.id + "'>Delete</button>";
+
+            rows += "<tr>";
+            rows += "<td>" + s.id + "</td>";
+            rows += "<td>" + s.ritId + "</td>";
+            rows += "<td>" + s.name + "</td>";
+            rows += "<td>" + s.email + "</td>";
+            rows += "<td>" + badge + "</td>";
+            rows += "<td>" + editBtn + deleteBtn + "</td>";
+            rows += "</tr>";
+        }
+
+        $("#studentsTable").html(rows);
+    }
+
+    $("#openAddModal").click(function() {
+        editingId = null;
+        $("#modalTitle").text("Add Student");
+        $("#ritId").val("");
+        $("#studentName").val("");
+        $("#studentEmail").val("");
+        $("#studentActive").prop("checked", true);
+        new bootstrap.Modal($("#studentModal")[0]).show();
+    });
+
+    $(document).on("click", ".editBtn", function() {
+        editingId = $(this).data("id");
+        $("#modalTitle").text("Edit Student");
+        $("#ritId").val($(this).data("ritid"));
+        $("#studentName").val($(this).data("name"));
+        $("#studentEmail").val($(this).data("email"));
+        var isActive = $(this).data("active");
+        $("#studentActive").prop("checked", isActive === true || isActive === "true");
+        new bootstrap.Modal($("#studentModal")[0]).show();
+    });
+
+    $(document).on("click", ".deleteBtn", function() {
+        var id = $(this).data("id");
+        if (!confirm("Delete this student?")) return;
+        $.ajax({
+            method: "DELETE",
+            url: API + "/" + id,
+            success: function() {
+                loadStudents();
+                showToast("Student deleted", "success");
+            },
+            error: function() {
+                showToast("Delete failed", "danger");
+            }
+        });
+    });
+
+    $("#saveBtn").click(function() {
+        var student = {
+            ritId: $("#ritId").val(),
+            name: $("#studentName").val(),
+            email: $("#studentEmail").val(),
+            active: $("#studentActive").is(":checked")
+        };
+
+        var url = API;
+        var method = "POST";
+        if (editingId) {
+            url = API + "/" + editingId;
+            method = "PUT";
+        }
+
+        $.ajax({
+            method: method,
+            url: url,
+            contentType: "application/json",
+            data: JSON.stringify(student),
+            success: function() {
+                bootstrap.Modal.getInstance($("#studentModal")[0]).hide();
+                loadStudents();
+                showToast(editingId ? "Student updated!" : "Student added!", "success");
+            },
+            error: function() {
+                showToast("Error saving student", "danger");
+            }
+        });
+    });
+
+    function showToast(message, type) {
+        $("#toast").removeClass().addClass("toast text-white border-0 bg-" + type);
+        $("#toastMsg").text(message);
+        new bootstrap.Toast($("#toast")[0]).show();
+    }
+
+</script>
+</body>
+</html>
