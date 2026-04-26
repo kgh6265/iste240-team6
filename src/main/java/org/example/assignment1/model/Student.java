@@ -1,3 +1,4 @@
+// Aditya Avinash - 761005899
 package org.example.assignment1.model;
 import jakarta.persistence.*;
 @Entity
