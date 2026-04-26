@@ -1,6 +1,7 @@
 // Aditya Avinash - 761005899
 
 package org.example.assignment1.controllers;
+
 import org.example.assignment1.model.Student;
 import org.example.assignment1.services.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,45 +43,37 @@ public class StudentController {
     }
 
     @PostMapping
-    public ResponseEntity<Student> createStudent(@RequestBody Student student) {
+    public ResponseEntity<?> createStudent(@RequestBody Student student) {
         try {
             Student saved = this.studentService.createStudent(student);
             return new ResponseEntity<>(saved, HttpStatus.CREATED);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Server error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Student> updateStudent(@PathVariable Long id,
-                                                 @RequestBody Student student) {
+    public ResponseEntity<?> updateStudent(@PathVariable Long id,
+                                           @RequestBody Student student) {
         try {
             Student updated = this.studentService.updateStudent(id, student);
             return new ResponseEntity<>(updated, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Student not found", HttpStatus.NOT_FOUND);
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
+    public ResponseEntity<?> deleteStudent(@PathVariable Long id) {
         try {
             this.studentService.deleteStudent(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-
-    @PutMapping("/{id}/status")
-    public ResponseEntity<Void> updateStatus(@PathVariable Long id,
-                                             @RequestParam boolean active) {
-        try {
-            studentService.updateStatus(id, active);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Student not found", HttpStatus.NOT_FOUND);
         }
     }
 }

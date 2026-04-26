@@ -88,6 +88,16 @@
             border: 1.5px solid #E8DECE;
             border-radius: 12px;
         }
+        .modal-header {
+            border-bottom: 1.5px solid #E8DECE;
+        }
+        .modal-footer {
+            border-top: 1.5px solid #E8DECE;
+        }
+        .modal-title {
+            color: #3D2B1F;
+            font-weight: 700;
+        }
     </style>
 </head>
 <body>
@@ -136,25 +146,53 @@
     </div>
 </div>
 
+
 <div class="modal fade" id="studentModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Add Student</h5>
+                <h5 class="modal-title" id="modalTitle">Add Student</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <input type="text" id="ritId" placeholder="RIT ID" class="form-control mb-2">
-                <input type="text" id="studentName" placeholder="Name" class="form-control mb-2">
-                <input type="email" id="studentEmail" placeholder="Email" class="form-control mb-2">
-                <input type="checkbox" id="studentActive" checked> Active
+                <input type="hidden" id="studentId">
+                <div class="mb-3">
+                    <label class="form-label">RIT ID</label>
+                    <input type="text" class="form-control" id="ritId" placeholder="e.g. 412002594">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="studentName" placeholder="Full Name">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" id="studentEmail" placeholder="email@rit.edu">
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="studentActive" checked>
+                    <label class="form-check-label">Active Student</label>
+                </div>
             </div>
             <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 <button class="btn btn-primary" id="saveBtn">Save</button>
             </div>
         </div>
     </div>
 </div>
 
+
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1100">
+    <div id="toast" class="toast text-white border-0" role="alert">
+        <div class="d-flex">
+            <div class="toast-body" id="toastMsg"></div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                    data-bs-dismiss="toast"></button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 
     var API = '/api/students';
@@ -164,74 +202,141 @@
         loadStudents();
     });
 
-    function showMessage(msg) {
-        alert(msg);
-    }
+    $("#searchInput").on("input", function() {
+        var name = $(this).val().trim();
+        if (name.length > 0) {
+            $.get(API + '/search?name=' + name, function(data) {
+                renderTable(data);
+            }).fail(function() {
+                showToast('Search failed', 'danger');
+            });
+        } else {
+            loadStudents();
+        }
+    });
 
     function loadStudents() {
         $.get(API, function(data) {
             renderTable(data);
+        }).fail(function() {
+            $("#studentsTable").html("<tr><td colspan='6' class='text-center text-danger'>Could not load students.</td></tr>");
         });
     }
 
     function renderTable(data) {
-        let rows = "";
-        data.forEach(s => {
-            rows += `
-        <tr>
-            <td>${s.id}</td>
-            <td>${s.ritId}</td>
-            <td>${s.name}</td>
-            <td>${s.email}</td>
-            <td>${s.active ? "Active" : "Inactive"}</td>
-            <td>
-                <button onclick="deleteStudent(${s.id})" class="btn btn-danger btn-sm">Delete</button>
-            </td>
-        </tr>`;
-        });
+        if (data.length === 0) {
+            $("#studentsTable").html("<tr><td colspan='6' class='text-center text-muted'>No students found.</td></tr>");
+            return;
+        }
+
+        var rows = "";
+        for (var i = 0; i < data.length; i++) {
+            var s = data[i];
+
+            var badge = "";
+            if (s.active) {
+                badge = "<span class='badge' style='background-color:#6B4F35;'>Active</span>";
+            } else {
+                badge = "<span class='badge bg-secondary'>Inactive</span>";
+            }
+
+            var editBtn = "<button class='btn btn-sm btn-warning me-1 editBtn'"
+                + " data-id='" + s.id + "'"
+                + " data-ritid='" + s.ritId + "'"
+                + " data-name='" + s.name + "'"
+                + " data-email='" + s.email + "'"
+                + " data-active='" + s.active + "'>Edit</button>";
+
+            var deleteBtn = "<button class='btn btn-sm btn-danger deleteBtn'"
+                + " data-id='" + s.id + "'>Delete</button>";
+
+            rows += "<tr>";
+            rows += "<td>" + s.id + "</td>";
+            rows += "<td>" + s.ritId + "</td>";
+            rows += "<td>" + s.name + "</td>";
+            rows += "<td>" + s.email + "</td>";
+            rows += "<td>" + badge + "</td>";
+            rows += "<td>" + editBtn + deleteBtn + "</td>";
+            rows += "</tr>";
+        }
+
         $("#studentsTable").html(rows);
     }
 
-    function deleteStudent(id) {
-        if (!confirm("Delete this student?")) return;
+    $("#openAddModal").click(function() {
+        editingId = null;
+        $("#modalTitle").text("Add Student");
+        $("#ritId").val("");
+        $("#studentName").val("");
+        $("#studentEmail").val("");
+        $("#studentActive").prop("checked", true);
+        new bootstrap.Modal($("#studentModal")[0]).show();
+    });
 
+    $(document).on("click", ".editBtn", function() {
+        editingId = $(this).data("id");
+        $("#modalTitle").text("Edit Student");
+        $("#ritId").val($(this).data("ritid"));
+        $("#studentName").val($(this).data("name"));
+        $("#studentEmail").val($(this).data("email"));
+        var isActive = $(this).data("active");
+        $("#studentActive").prop("checked", isActive === true || isActive === "true");
+        new bootstrap.Modal($("#studentModal")[0]).show();
+    });
+
+    $(document).on("click", ".deleteBtn", function() {
+        var id = $(this).data("id");
+        if (!confirm("Delete this student?")) return;
         $.ajax({
             method: "DELETE",
             url: API + "/" + id,
             success: function() {
-                showMessage("Student deleted successfully");
                 loadStudents();
+                showToast("Student deleted", "success");
             },
             error: function() {
-                showMessage("Student not found or delete failed");
+                showToast("Delete failed", "danger");
             }
         });
-    }
+    });
 
     $("#saveBtn").click(function() {
-        let student = {
+        var student = {
             ritId: $("#ritId").val(),
             name: $("#studentName").val(),
             email: $("#studentEmail").val(),
             active: $("#studentActive").is(":checked")
         };
 
+        var url = API;
+        var method = "POST";
+        if (editingId) {
+            url = API + "/" + editingId;
+            method = "PUT";
+        }
+
         $.ajax({
-            method: "POST",
-            url: API,
+            method: method,
+            url: url,
             contentType: "application/json",
             data: JSON.stringify(student),
             success: function() {
-                showMessage("Student added successfully");
+                bootstrap.Modal.getInstance($("#studentModal")[0]).hide();
                 loadStudents();
+                showToast(editingId ? "Student updated!" : "Student added!", "success");
             },
             error: function() {
-                showMessage("Error adding student");
+                showToast("Error saving student", "danger");
             }
         });
     });
 
-</script>
+    function showToast(message, type) {
+        $("#toast").removeClass().addClass("toast text-white border-0 bg-" + type);
+        $("#toastMsg").text(message);
+        new bootstrap.Toast($("#toast")[0]).show();
+    }
 
+</script>
 </body>
 </html>
