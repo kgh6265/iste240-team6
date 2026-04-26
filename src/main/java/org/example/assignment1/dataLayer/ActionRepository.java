@@ -1,3 +1,4 @@
+// Stydent Name: Khaleel Hassan | Student ID: 412002594
 package org.example.assignment1.dataLayer;
 
 import org.example.assignment1.model.Action;
@@ -17,7 +18,7 @@ public interface ActionRepository extends JpaRepository<Action, Integer> {
     List<Action> findAll();
 
     @Query("SELECT a FROM Action a WHERE a.eventid = :eventId")
-    List<Action> findByEventid(@Param("eventId") Integer eventId);
+    List<Action> findByEventId(@Param("eventId") Integer eventId);
 
     @Modifying
     @Query("UPDATE Action a SET a.timestamp = :timestamp WHERE a.id = :id")

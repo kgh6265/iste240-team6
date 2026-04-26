@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Event Details - StudentPulse</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style>
+        body { background-color: #F5F0E8; font-family: 'Georgia', serif; color: #3D2B1F; }
+        .card-custom { background: #FDFAF5; border-radius: 12px; padding: 1.6rem; border: 1.5px solid #E8DECE; margin-bottom: 1rem; }
+        .comment-item { border-bottom: 1px solid #E8DECE; padding: 10px 0; }
+        .btn-primary-custom { background-color: #3D2B1F; color: #F5F0E8; border: none; border-radius: 8px; }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <a href="events.html" class="btn btn-outline-secondary mb-3">← Back to Events</a>
+
+    <div id="eventHeader" class="card-custom">
+        <h2 id="dispTitle">Loading Event...</h2>
+        <p id="dispDesc"></p>
+        <span id="dispCategory" class="badge bg-secondary"></span>
+        <span id="dispStatus" class="badge bg-info"></span>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <h4>Quick Update Event</h4>
+            <div class="card-custom">
+                <input type="text" id="editTitle" class="form-control mb-2">
+                <textarea id="editDesc" class="form-control mb-2"></textarea>
+                <button class="btn btn-primary-custom w-100" onclick="updateEvent()">Save Event Changes</button>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <h4>Comments</h4>
+            <div class="card-custom">
+                <textarea id="commentContent" class="form-control" placeholder="Write a comment..."></textarea>
+                <button class="btn btn-primary-custom mt-2" onclick="postComment()">Post Comment</button>
+            </div>
+
+            <div id="commentsList" class="mt-3">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const eventId = urlParams.get('id');
+
+    $(document).ready(function() {
+        loadEventDetails();
+        loadComments();
+    });
+
+    function loadEventDetails() {
+        $.get("/api/events/" + eventId, function(e) {
+            $("#dispTitle").text(e.title);
+            $("#dispDesc").text(e.description);
+            $("#dispCategory").text(e.category);
+            $("#dispStatus").text(e.status);
+
+            $("#editTitle").val(e.title);
+            $("#editDesc").val(e.description);
+        });
+    }
+
+    function updateEvent() {
+        var data = {
+            title: $("#editTitle").val(),
+            description: $("#editDesc").val(),
+            category: $("#dispCategory").text(),
+            status: $("#dispStatus").text()
+        };
+        $.ajax({
+            url: "/api/events/" + eventId,
+            type: "PUT",
+            contentType: "application/json",
+            data: JSON.stringify(data),
+            success: function() { alert("Event updated!"); loadEventDetails(); }
+        });
+    }
+
+    function loadComments() {
+        $.get("/api/comments/search?eventId=" + eventId, function(data) {
+            var html = "";
+            data.forEach(c => {
+                html += `<div class="comment-item">
+                    <p class="mb-1">${c.content}</p>
+                    <small class="text-muted">By Student ID: ${c.studentid}</small>
+                    <div class="mt-1">
+                        <button class="btn btn-sm btn-link text-danger" onclick="deleteComment(${c.id})">Delete</button>
+                    </div>
+                </div>`;
+            });
+            $("#commentsList").html(html || "<p>No comments yet.</p>");
+        });
+    }
+
+    function postComment() {
+        var data = {
+            eventid: eventId,
+            studentid: 1, // Placeholder
+            content: $("#commentContent").val()
+        };
+        $.ajax({
+            url: "/api/comments",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(data),
+            success: function() {
+                $("#commentContent").val("");
+                loadComments();
+            }
+        });
+    }
+
+    function deleteComment(id) {
+        if(confirm("Delete comment?")) {
+            $.ajax({
+                url: "/api/comments/" + id,
+                type: "DELETE",
+                success: function() { loadComments(); }
+            });
+        }
+    }
+</script>
+</body>
+</html>

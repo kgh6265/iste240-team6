@@ -1,42 +1,115 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>StudentPulse</title>
-    <style>
-      body {
-        margin: 0 auto;
-        max-width: 600px;
-        font-family: sans-serif;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudentPulse</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #F5F0E8;
+      font-family: 'Georgia', serif;
+      color: #3D2B1F;
+    }
+    .top-nav {
+      background-color: #3D2B1F;
+      padding: 0.8rem 2rem;
+    }
+    .top-nav .navbar-brand {
+      font-size: 1.3rem;
+      letter-spacing: 0.5px;
+    }
+    .top-nav .nav-link {
+      color: #D4C5A9 !important;
+      font-size: 0.95rem;
+    }
+    .top-nav .nav-link:hover {
+      color: #ffffff !important;
+    }
+    .hero {
+      background: linear-gradient(135deg, #3D2B1F, #6B4F35);
+      color: #F5F0E8;
+      padding: 3.5rem 3rem;
+      border-radius: 14px;
+      margin-bottom: 2.5rem;
+    }
+    .hero h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+      letter-spacing: 0.3px;
+    }
+    .hero p {
+      opacity: 0.88;
+      font-size: 1rem;
+      line-height: 1.7;
+      margin: 0;
+    }
+    .section-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #8B7355;
+      margin-bottom: 1rem;
+    }
+    .nav-card {
+      background: #FDFAF5;
+      border-radius: 12px;
+      padding: 1.6rem;
+      text-decoration: none;
+      color: #3D2B1F;
+      border: 1.5px solid #E8DECE;
+      transition: all 0.2s ease;
+      display: block;
+      height: 100%;
+    }
+    .nav-card:hover {
+      border-color: #8B7355;
+      color: #3D2B1F;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(61, 43, 31, 0.1);
+      background: #FFF8EE;
+    }
+    .nav-card .icon {
+      font-size: 1.8rem;
+      margin-bottom: 0.6rem;
+      display: block;
+    }
+    .nav-card h5 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin: 0 0 0.3rem 0;
+    }
+    .nav-card small {
+      color: #9B8B75;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      display: block;
+    }
+    .divider {
+      border: none;
+      border-top: 1.5px solid #E0D5C5;
+      margin: 2rem 0;
+    }
+  </style>
+</head>
+<body>
 
-      h1 {
-        color: blue;
-      }
+<nav class="navbar navbar-dark top-nav mb-4">
+  <a class="navbar-brand fw-bold text-white" href="index.html">🎓 StudentPulse</a>
+  <div class="d-flex gap-3">
+    <a class="nav-link fw-bold" href="index.html">Home</a>
+    <a class="nav-link" href="students.html">Students</a>
+    <a class="nav-link" href="events.html">Events</a>
+    <a class="nav-link" href="comments.html">Comments</a>
+  </div>
+</nav>
 
-      .nav-links {
-        margin-top: 24px;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-      }
+<div class="container">
 
-      .nav-links a {
-        display: inline-block;
-        padding: 10px 16px;
-        background-color: blue;
-        color: white;
-        text-decoration: none;
-        width: fit-content;
-      }
-
-      .nav-links a:hover {
-        background-color: darkblue;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>Student Pulse</h1>
+  <div class="hero">
+    <h2>🎓 Welcome to StudentPulse</h2>
     <p>
       StudentPulse is a dynamic web application designed to formalize the
       creation of campus life activities at RIT Dubai. Instead of a system where
@@ -45,14 +118,70 @@
       model, the platform ensures that only events with verified student
       interest are moved to the administrative review phase.
     </p>
+  </div>
 
-    <div class="nav-links">
-      <a href="/events">View Events</a>
-      <a href="/events/add">Add New Event</a>
-      <a href="/students">View Students</a>
-      <a href="/students/add">Add New Student</a>
-      <a href="/comments">View Comments</a>
-      <a href="/comments/add">Add New Comment</a>
+  <p class="section-label">Browse</p>
+  <div class="row g-3 mb-4">
+
+    <div class="col-md-4">
+      <a href="students.html" class="nav-card">
+        <span class="icon">👥</span>
+        <h5>Students</h5>
+        <small>View and manage all registered students</small>
+      </a>
     </div>
-  </body>
+
+    <div class="col-md-4">
+      <a href="events.html" class="nav-card">
+        <span class="icon">📅</span>
+        <h5>Events</h5>
+        <small>Browse and propose campus events</small>
+      </a>
+    </div>
+
+    <div class="col-md-4">
+      <a href="comments.html" class="nav-card">
+        <span class="icon">💬</span>
+        <h5>Comments</h5>
+        <small>View feedback and comments on events</small>
+      </a>
+    </div>
+
+  </div>
+
+  <hr class="divider">
+
+  <p class="section-label">Quick Add</p>
+  <div class="row g-3 mb-4">
+
+    <div class="col-md-4">
+      <a href="students.html" class="nav-card">
+        <span class="icon">➕</span>
+        <h5>Add New Student</h5>
+        <small>Register a new student to the system</small>
+      </a>
+    </div>
+
+    <div class="col-md-4">
+      <a href="events.html" class="nav-card">
+        <span class="icon">➕</span>
+        <h5>Add New Event</h5>
+        <small>Propose a new campus event</small>
+      </a>
+    </div>
+
+    <div class="col-md-4">
+      <a href="comments.html" class="nav-card">
+        <span class="icon">➕</span>
+        <h5>Add New Comment</h5>
+        <small>Leave a comment on an event</small>
+      </a>
+    </div>
+
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>

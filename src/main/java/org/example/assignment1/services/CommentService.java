@@ -1,3 +1,4 @@
+// Stydent Name: Khaleel Hassan | Student ID: 412002594
 package org.example.assignment1.services;
 
 import jakarta.transaction.Transactional;
@@ -28,7 +29,7 @@ public class CommentService {
     }
 
     public List<Comment> getCommentsByStudent(Integer studentId) {
-        return commentRepository.findByStudentid(studentId);
+        return commentRepository.findByStudentId(studentId);
     }
 
     public Comment updateComment(Long id, Comment details) {

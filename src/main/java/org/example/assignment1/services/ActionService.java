@@ -1,3 +1,4 @@
+// Stydent Name: Khaleel Hassan | Student ID: 412002594
 package org.example.assignment1.services;
 
 import jakarta.transaction.Transactional;
@@ -29,7 +30,7 @@ public class ActionService {
     }
 
     public List<Action> findByEvent(Integer eventId) {
-        return actionRepository.findByEventid(eventId);
+        return actionRepository.findByEventId(eventId);
     }
 
     public Action fullUpdate(int id, Action actionDetails) {
